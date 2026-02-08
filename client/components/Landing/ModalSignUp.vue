@@ -2,8 +2,7 @@
 .modal
   .modal__close-space(@click="$emit('close')")
   .auth-modal.sign-up
-
-    button.auth-modal__close(@click="$emit('close')") Закрыть
+    button.auth-modal__close-button(@click="$emit('close')" type="button") ×
 
     .auth-modal__title Создать аккаунт
 

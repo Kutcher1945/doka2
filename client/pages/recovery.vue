@@ -55,9 +55,9 @@
 </template>
 
 <script>
-import LandingFooter from '@/components/Landing/LandingFooter'
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'
 import { confirmed, required, min } from 'vee-validate/dist/rules'
+import LandingFooter from '@/components/Landing/LandingFooter'
 
 extend('required', {
   ...required,

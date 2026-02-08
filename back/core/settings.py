@@ -10,13 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import importlib
 import os
 from pathlib import Path
 
 import environ
-from django.conf import settings
-from django.db.backends.utils import CursorWrapper
 
 env = environ.Env()
 environ.Env.read_env()
@@ -254,28 +251,28 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    #     'NAME': 'postgres',
-    #     'USER': 'postgres',
-    #     'PASSWORD': 'adilan10',
-    #     'HOST': '127.0.0.1',
-    #     'PORT': '5432',
-    # }
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': env('DB_NAME'),
-        'USER': env('DB_USER'),
-        'PASSWORD': env('DB_PASSWORD'),
-        'HOST': env('DB_HOST'),
-        'PORT': env('DB_PORT'),
-        'CONN_MAX_AGE': 3600,
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1;",
-            'charset': 'utf8mb4',
-            'use_unicode': True,
-        }
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cybert_db',
+        'USER': 'zhancare',
+        'PASSWORD': '4HPzQt2HyU',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': env('DB_NAME'),
+    #     'USER': env('DB_USER'),
+    #     'PASSWORD': env('DB_PASSWORD'),
+    #     'HOST': env('DB_HOST'),
+    #     'PORT': env('DB_PORT'),
+    #     'CONN_MAX_AGE': 3600,
+    #     'OPTIONS': {
+    #         'init_command': "SET sql_mode='STRICT_TRANS_TABLES', innodb_strict_mode=1;",
+    #         'charset': 'utf8mb4',
+    #         'use_unicode': True,
+    #     }
+    # }
 }
 
 # Password validation
@@ -361,23 +358,24 @@ CHANNEL_LAYERS = {
     }
 }
 
-for name, config in settings.DATABASES.items():
-    module = importlib.import_module(config["ENGINE"] + ".base")
-
-
-    def ensure_connection(self):
-        if self.connection is not None:
-            try:
-                with CursorWrapper(self.create_cursor(), self) as cursor:
-                    cursor.execute("SELECT 1")
-                return
-            except Exception as exception:
-                print("SQL CONNECTION something go wrong : %s " % exception)
-                pass
-
-        with self.wrap_database_errors:
-            print("Reconnect?")
-            self.connect()
-
-
-    module.DatabaseWrapper.ensure_connection = ensure_connection
+# Commented out custom ensure_connection to fix PostgreSQL transaction issues
+# for name, config in settings.DATABASES.items():
+#     module = importlib.import_module(config["ENGINE"] + ".base")
+#
+#
+#     def ensure_connection(self):
+#         if self.connection is not None:
+#             try:
+#                 with CursorWrapper(self.create_cursor(), self) as cursor:
+#                     cursor.execute("SELECT 1")
+#                 return
+#             except Exception as exception:
+#                 print("SQL CONNECTION something go wrong : %s " % exception)
+#                 pass
+#
+#         with self.wrap_database_errors:
+#             print("Reconnect?")
+#             self.connect()
+#
+#
+#     module.DatabaseWrapper.ensure_connection = ensure_connection

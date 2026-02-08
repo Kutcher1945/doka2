@@ -82,20 +82,19 @@ export default {
 }
 .prove__content {
   text-align: center;
-  height: 110rem;
+  min-height: 100vh;
+  height: auto;
   position: relative;
   background-image: url('/images/redesign/landing/prove.png');
-  -webkit-background-size: cover;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
+  padding: 4rem 0;
+
   @media only screen and (max-width: 600px) {
-    height: auto;
-
-    min-height: 100vh;
-
+    min-height: 80vh;
+    background-size: cover;
   }
-  ///images/redesign/landing/prove.png
 }
 .prove__image {
   width: 192rem;
@@ -197,46 +196,86 @@ export default {
   }
 }
 .prove__list-1 {
-  //@media only screen and (max-width: 600px) {
-  //  display: none;
-  //}
   &-item {
+    padding: 1.2rem 2rem;
+    background: rgba(20, 20, 21, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 1.2rem;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(141, 94, 244, 0.15);
+      border-color: rgba(141, 94, 244, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(141, 94, 244, 0.3);
+    }
+
     &-1 {
       position: absolute;
-      top: 33.5%;
-      left: 7%;
+      top: 30%;
+      left: 5%;
+      animation-delay: 0.2s;
 
-      animation-delay: 1s;
+      @media only screen and (max-width: 1200px) {
+        left: 2%;
+        top: 28%;
+      }
     }
     &-2 {
       position: absolute;
-      top: 34.5%;
-      left: 22%;
+      top: 31%;
+      left: 20%;
+
+      @media only screen and (max-width: 1200px) {
+        left: 18%;
+      }
       @media only screen and (max-width: 600px) {
         display: none;
       }
     }
     &-3 {
       position: absolute;
-      top: 34.5%;
-      right: 24%;
+      top: 31%;
+      right: 20%;
+
+      @media only screen and (max-width: 1200px) {
+        right: 18%;
+      }
       @media only screen and (max-width: 600px) {
-        right: 34%;
+        right: 2%;
+        top: 28%;
       }
     }
     &-4 {
       position: absolute;
-      top: 33.5%;
-      right: 8%;
-      animation-delay: 1s;
+      top: 30%;
+      right: 5%;
+      animation-delay: 0.2s;
+
+      @media only screen and (max-width: 1200px) {
+        right: 2%;
+        top: 28%;
+      }
     }
 
     &-1,
     &-4 {
-      color: #484848;
+      color: #9E9E9E;
       .prove__text_accent {
-        color: #676767;
-        font-size: 1.8rem;
+        color: #B8B8B8;
+        font-size: 2rem;
+        font-weight: 800;
+      }
+    }
+
+    &-2,
+    &-3 {
+      color: #AEAEAE;
+      .prove__text_accent {
+        color: #D4D4D4;
+        font-size: 2rem;
+        font-weight: 800;
       }
     }
   }

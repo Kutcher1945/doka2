@@ -2,8 +2,7 @@
 .modal
   .modal__close-space(@click="$emit('close')")
   .auth-modal.recover
-
-    button.auth-modal__close(@click="$emit('close')") Закрыть
+    button.auth-modal__close-button(@click="$emit('close')" type="button") ×
 
     .recover__main(v-if="!emailSend")
       .auth-modal__title.recover__title Забыли пароль?

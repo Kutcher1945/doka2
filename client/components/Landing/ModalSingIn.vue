@@ -6,8 +6,7 @@ mixin validation-icons()
 .modal
   .modal__close-space(@click="$emit('close')")
   .auth-modal.sign-in
-
-    button.auth-modal__close(@click="$emit('close')") Закрыть
+    button.auth-modal__close-button(@click="$emit('close')" type="button") ×
 
     .auth-modal__title Вход в аккаунт
 
