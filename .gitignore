@@ -16,3 +16,4 @@ __pycache__/
 
 client/.eslintcache
 api/*
+back/core/.env
