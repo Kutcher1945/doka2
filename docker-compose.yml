@@ -1,0 +1,84 @@
+version: "2"
+
+services:
+  migrations:
+    build: ./back
+    depends_on:
+      - "redis"
+    command: ["python", "manage.py", "migrate"]
+  web:
+    build: ./back
+    container_name: backend
+    ports:
+      - "8000:8000"
+    restart: always
+    volumes:
+      - ./back:/code
+    depends_on:
+      - "migrations"
+    # command: ["gunicorn", "core.asgi:application", "-b", "0.0.0.0:8000", "--timeout", "30", "--graceful-timeout", "30", "--keep-alive", "10", "--worker-tmp-dir", "/dev/shm", "--workers", "10", "--threads", "10", "--worker-class", "uvicorn.workers.UvicornWorker"]
+    command: ["daphne", "core.asgi:application", "-b", "0.0.0.0", "-p", "8000", "-t", "30", "--websocket_connect_timeout", "10", "--ping-interval", "10", "--ping-timeout", "10", "--application-close-timeout", "30"]
+  wss:
+    build: ./back
+    container_name: wss
+    ports:
+      - "127.0.0.1:8001:8000"
+    restart: always
+    depends_on:
+      - "migrations"
+    command: ["daphne", "core.asgi:application", "-b", "0.0.0.0", "-p", "8000", "-t", "30", "--websocket_connect_timeout", "10", "--ping-interval", "10", "--ping-timeout", "10", "--application-close-timeout", "30"]
+  express:
+    build: ./client
+    container_name: express
+    ports:
+      - "127.0.0.1:3001:3001"
+    restart: always
+    depends_on:
+      - "migrations"
+    command: ["node", "api/index.js"]
+  front:
+    build: ./client
+    container_name: front
+    ports:
+      - "3000:3000"
+    restart: always
+    command: ["nuxt", "start"]
+
+  redis:
+    image: redis:5
+    restart: always
+    volumes:
+      - redis:/data
+
+  celery:
+    command: celery -A core worker --loglevel=info -E --concurrency=4
+    build: ./back
+    volumes:
+      - ./back:/code
+    depends_on:
+      - redis
+      - web
+    restart: on-failure
+    environment:
+       - DJANGO_SETTINGS_MODULE=core.settings
+
+  beat:
+    command: celery -A core beat
+    build: ./back
+    volumes:
+      - ./back:/code
+    depends_on:
+       - celery
+    restart: on-failure
+    environment:
+       - DJANGO_SETTINGS_MODULE=core.settings
+
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  redis:
+  media:
+  static:

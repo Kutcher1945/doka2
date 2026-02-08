@@ -1,0 +1,85 @@
+version: "2"
+
+services:
+  web:
+    build: ./back
+    container_name: backend
+    ports:
+      - "8000:8000"
+    restart: on-failure
+    volumes:
+      - ./back:/code
+    # command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+    # command: ["daphne", "api.asgi:application", "-b", "0.0.0.0", "-p", "8000"]
+
+
+  redis:
+    image: redis:5
+    ports:
+      - "6379:6379"
+
+  celery:
+    command: celery -A core worker --loglevel=info -E
+    build: ./back
+    volumes:
+      - ./back:/code
+    depends_on:
+      - redis
+      - web
+    restart: on-failure
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+
+  beat:
+    command: celery -A core beat
+    build: ./back
+    depends_on:
+      - celery
+    volumes:
+      - ./back:/code
+    restart: on-failure
+    environment:
+      - DJANGO_SETTINGS_MODULE=core.settings
+  
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_ERLANG_COOKIE: 'secret cookie here'
+    # volumes:
+    #   - ./db-data:/var/lib/rabbitmq
+    ports:
+      - 5672:5672
+    # depends_on: 
+    #   - postgres
+
+  mysql:
+    container_name: mysql
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 'django'
+      MYSQL_DATABASE: 'django'
+      MYSQL_USER: 'django'
+      MYSQL_PASSWORD: 'django'
+    volumes:
+      - mysql:/var/lib/mysql
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin:latest
+    restart: always
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: 'mysql'
+      PMA_ABSOLUTE_URI: 'https://cybert.online/pmapp/'
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  redis:
+  mysql:
+  media:
+  static:

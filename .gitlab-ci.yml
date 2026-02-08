@@ -1,0 +1,103 @@
+stages:
+  - build-api
+  - build-front
+  - deploy
+
+docker-build-api:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "production"
+  image: docker:stable
+  tags:
+  - replica01
+  stage: build-api
+  variables:
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:19.03.0-dind
+  before_script:
+    - docker login -u $CI_BUILD_TOKEN_USER -p $CI_BUILD_TOKEN registry.gitlab.com
+  script:
+    - cd back
+    - docker build -f ./Dockerfile -t $CONTAINER_RELEASE_API_IMAGE:$CI_COMMIT_SHORT_SHA -t $CONTAINER_RELEASE_API_IMAGE:latest .
+    - docker push $CONTAINER_RELEASE_API_IMAGE
+
+docker-build-front:
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "production"
+  image: docker:stable
+  tags:
+  - replica01
+  stage: build-front
+  variables:
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_HOST: tcp://docker:2375/
+    DOCKER_DRIVER: overlay2
+  services:
+    - docker:19.03.0-dind
+  before_script:
+    - docker login -u $CI_BUILD_TOKEN_USER -p $CI_BUILD_TOKEN registry.gitlab.com
+  script:
+    - cd client
+    - docker build --pull -f Dockerfile -t $CONTAINER_RELEASE_FRONT_IMAGE:$CI_COMMIT_SHORT_SHA -t $CONTAINER_RELEASE_FRONT_IMAGE:latest .
+    - docker push $CONTAINER_RELEASE_FRONT_IMAGE
+
+# deploy to stage:
+#   image: docker:stable
+#   rules:
+#     - if: $CI_COMMIT_BRANCH == "master"
+#       variables:
+#         DEPLOYMENT_SERVER_IP: "$DEPLOYMENT_STAGING_SERVER_IP"
+#     - if: $CI_COMMIT_BRANCH == "production"
+#       variables:
+#         DEPLOYMENT_SERVER_IP: "$DEPLOYMENT_PRODUCTION_SERVER_IP"
+#   tags:
+#     - replica01
+#   stage: deploy
+#   before_script:
+#     - apk update
+#     - apk add openssh curl
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - echo "${DEPLOY_STAGING_SERVER_PRIVATE_KEY}" | tr -d '\r' > ~/.ssh/ssh.pem
+#     - chmod 600 ~/.ssh/ssh.pem
+#     - ssh-keyscan -H ${DEPLOYMENT_SERVER_IP} >> ~/.ssh/known_hosts
+#     - chmod 600 ~/.ssh/known_hosts
+#     - sed -i "s,{api-image},$CONTAINER_RELEASE_API_IMAGE:$CI_COMMIT_SHORT_SHA,g;s,{front-image},$CONTAINER_RELEASE_FRONT_IMAGE:$CI_COMMIT_SHORT_SHA,g;s,{express-image},$CONTAINER_RELEASE_FRONT_IMAGE:$CI_COMMIT_SHORT_SHA,g"  docker-compose.yml
+#     - scp -i ~/.ssh/ssh.pem -r  ./docker-compose.yml ${SSH_USERNAME}@${DEPLOYMENT_SERVER_IP}:/root/cybert
+#   script:
+#     # run docker-compose
+#     - ssh -i ~/.ssh/ssh.pem ${SSH_USERNAME}@${DEPLOYMENT_SERVER_IP}
+#       "cd ~/cybert;
+#       docker login -u $CI_BUILD_TOKEN_USER -p $CI_BUILD_TOKEN registry.gitlab.com;
+#       docker-compose -f ./docker-compose.yml pull;
+#       docker-compose -f ./docker-compose.yml up -d;"
+
+deploy to new:
+  image: docker:stable
+  tags:
+    - seodocker
+  stage: deploy
+  variables:
+    DEPLOY_SERVER_PRIVATE_KEY: ${DEPLOY_PROD_SERVER_PRIVATE_KEY2}
+    DEPLOY_SERVER_IP: ${DEPLOYMENT_PROD_SERVER_IP}
+    SSH_USERNAME: ${SSH_USERNAME}
+  only:
+    - production
+  before_script:
+    - apk update
+    - apk add openssh curl
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "${DEPLOY_PROD_SERVER_PRIVATE_KEY2}" | tr -d '\r' > ~/.ssh/ssh.pem
+    - chmod 600 ~/.ssh/ssh.pem
+    - ssh-keyscan -H 193.247.74.203 >> ~/.ssh/known_hosts
+    - chmod 600 ~/.ssh/known_hosts
+    - sed -i "s,{api-image},$CONTAINER_RELEASE_API_IMAGE:$CI_COMMIT_SHORT_SHA,g;s,{front-image},$CONTAINER_RELEASE_FRONT_IMAGE:$CI_COMMIT_SHORT_SHA,g;s,{express-image},$CONTAINER_RELEASE_FRONT_IMAGE:$CI_COMMIT_SHORT_SHA,g"  docker-compose.yml
+    - scp -i ~/.ssh/ssh.pem -r  ./docker-compose.yml root@193.247.74.203:/root/cybert
+  script:
+    # run docker-compose
+    - ssh -i ~/.ssh/ssh.pem root@193.247.74.203 "cd ~/cybert; docker login -u $CI_BUILD_TOKEN_USER -p $CI_BUILD_TOKEN registry.gitlab.com; docker-compose -f ./docker-compose.yml pull; docker-compose -f ./docker-compose.yml up -d;"
+    - ssh -i ~/.ssh/ssh.pem root@193.247.74.203 "docker image prune -a -f"
+    
