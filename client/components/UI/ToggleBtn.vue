@@ -43,22 +43,7 @@ export default {
 
 <style lang="scss" scoped>
 .toggle-btn {
-  &__icon {
-    margin-right: auto;
-    &--disabled {
-      filter: grayscale(1);
-    }
-  }
-  &--active {
-    background: #754FE0;
-  }
-  &--disabled {
-    cursor:not-allowed;
-    background: #c3c3c3;
-    &:hover {
-      background: #c3c3c3!important;
-    }
-  }
+  // Base properties
   user-select: none;
   text-transform: uppercase;
   cursor: pointer;
@@ -75,9 +60,31 @@ export default {
   line-height: 13px;
   letter-spacing: 0em;
   text-align: center;
+
+  // Nested elements and modifiers
+  &__icon {
+    margin-right: auto;
+    &--disabled {
+      filter: grayscale(1);
+    }
+  }
+
+  &--active {
+    background: #754FE0;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    background: #c3c3c3;
+    &:hover {
+      background: #c3c3c3!important;
+    }
+  }
+
   &:hover {
     background: #754FE0;
   }
+
   &__text {
     margin-right: auto;
   }

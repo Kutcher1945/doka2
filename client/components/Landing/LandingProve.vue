@@ -244,21 +244,21 @@ export default {
 .prove__list-2 {
   &-item {
     &-1 {
-      @media only screen and (max-width: 600px) {
-    display: none;
-  }
       position: absolute;
       bottom: 18.5%;
       left: 4%;
       animation-delay: 1s;
+      @media only screen and (max-width: 600px) {
+        display: none;
+      }
     }
     &-2 {
-      @media only screen and (max-width: 600px) {
-    display: none;
-  }
       position: absolute;
       left: 20%;
       bottom: 15%;
+      @media only screen and (max-width: 600px) {
+        display: none;
+      }
     }
     &-3 {
       position: absolute;
@@ -270,21 +270,21 @@ export default {
       }
     }
     &-4 {
-      @media only screen and (max-width: 600px) {
-    display: none;
-  }
       position: absolute;
       right: 24.5%;
       bottom: 15%;
+      @media only screen and (max-width: 600px) {
+        display: none;
+      }
     }
     &-5 {
-      @media only screen and (max-width: 600px) {
-    display: none;
-  }
       position: absolute;
       bottom: 18.5%;
       right: 8%;
       animation-delay: 1s;
+      @media only screen and (max-width: 600px) {
+        display: none;
+      }
     }
 
     &-1,

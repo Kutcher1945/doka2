@@ -193,7 +193,7 @@ export default {
       background: #1F1F1F;
       border-radius: 5px;
       &:disabled {
-        background: lighten(#1f1f1f, 10);
+        background: #383838;  // Lightened version of #1f1f1f by 10%
         cursor: not-allowed;
       }
     }

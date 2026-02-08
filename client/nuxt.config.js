@@ -2,8 +2,8 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   ssr: false,
   server: {
-    host: '0.0.0.0',
-    port: '3000'
+    host: 'localhost',
+    port: 3000
   },
   env: {
     dev: process.env.NODE_ENV === 'dev',
@@ -102,7 +102,16 @@ export default {
   build: {
     transpile: [
       'vee-validate/dist/rules'
-    ]
+    ],
+    loaders: {
+      scss: {
+        implementation: require('sass'),
+        sassOptions: {
+          api: 'modern-compiler',
+          silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin', 'color-functions']
+        }
+      }
+    }
   },
   auth: {
     strategies: {

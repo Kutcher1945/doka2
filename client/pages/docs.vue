@@ -58,13 +58,13 @@ export default {
   background: #1F1F1F;
   border-radius: .5rem;
   padding: 1.6rem 3.2rem;
-  @media screen and (max-width: 767px) {
-    padding: 1.6rem;
-  }
-
   height: auto;
   max-height: 80vh;
   overflow: auto;
+
+  @media screen and (max-width: 767px) {
+    padding: 1.6rem;
+  }
   &::-webkit-scrollbar {
     width: .12rem;
   }
