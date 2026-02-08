@@ -70,16 +70,48 @@ export default {
 <style lang="scss" scoped>
 .index-button {
   cursor: pointer;
-  padding: .4rem 3.6rem;
+  padding: 1.4rem 4.8rem;
 
-  font-weight: 400;
+  font-weight: 600;
   font-size: 2.1rem;
   line-height: 119%;
   color: #FFFFFF;
   text-align: center;
 
-  background: #8D5EF4;
-  border-radius: .8rem;
+  background: linear-gradient(135deg, #8D5EF4 0%, #B999FD 100%);
+  border-radius: 1.2rem;
+  border: none;
+
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(141, 94, 244, 0.4),
+              0 8px 40px rgba(141, 94, 244, 0.2);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(141, 94, 244, 0.5),
+                0 12px 50px rgba(141, 94, 244, 0.3);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 /*
   ============================================================
@@ -94,10 +126,27 @@ export default {
   font-size: 7rem;
   line-height: 124%;
   color: #FFFFFF;
-
   text-align: center;
-
   margin-bottom: 12rem;
+
+  background: linear-gradient(135deg, #FFFFFF 0%, #B999FD 50%, #8D5EF4 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12rem;
+    height: 0.4rem;
+    background: linear-gradient(90deg, transparent, #8D5EF4, transparent);
+    border-radius: 2px;
+  }
   @media only screen and (max-width: 600px) {
     font-size: 48px;
   }
@@ -134,12 +183,23 @@ export default {
 .feature {
   position: relative;
   z-index: 0;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-8px);
+
+    .feature__decoration {
+      transform: scale(1.05);
+      filter: drop-shadow(0 10px 30px rgba(141, 94, 244, 0.3));
+    }
+  }
 }
 .feature__container {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
   position: relative;
+  transition: all 0.3s ease;
 }
 .feature__list {
   display: grid;
@@ -153,9 +213,20 @@ export default {
 .feature__list-image {
   width: 9.6rem;
   height: 3.6rem;
+  transition: transform 0.3s ease, filter 0.3s ease;
+
+  &:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+  }
+
   @media only screen and (max-width: 600px) {
     width: auto;
   }
+}
+
+.feature__decoration {
+  transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .feature-1 {

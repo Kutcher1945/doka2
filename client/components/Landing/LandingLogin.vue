@@ -77,16 +77,48 @@ export default {
 <style lang="scss" scoped>
 .index-button {
   cursor: pointer;
-  padding: .4rem 3.6rem;
+  padding: 1.4rem 4.8rem;
 
-  font-weight: 400;
+  font-weight: 600;
   font-size: 2.1rem;
   line-height: 119%;
   color: #FFFFFF;
   text-align: center;
 
-  background: #8D5EF4;
-  border-radius: .8rem;
+  background: linear-gradient(135deg, #8D5EF4 0%, #B999FD 100%);
+  border-radius: 1.2rem;
+  border: none;
+
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 20px rgba(141, 94, 244, 0.4),
+              0 8px 40px rgba(141, 94, 244, 0.2);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 30px rgba(141, 94, 244, 0.5),
+                0 12px 50px rgba(141, 94, 244, 0.3);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 /*
   ============================================================
@@ -102,10 +134,18 @@ export default {
 .header__logo {
   display: flex;
   justify-content: center;
-  padding: 1.2rem 0;
+  padding: 2rem 0;
+
   &-image {
-    width: 6.4rem;
-    height: 6.4rem;
+    width: 8rem;
+    height: 8rem;
+    filter: drop-shadow(0 0 20px rgba(141, 94, 244, 0.5));
+    transition: transform 0.3s ease, filter 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+      filter: drop-shadow(0 0 30px rgba(141, 94, 244, 0.8));
+    }
   }
 }
 .header__panel {
@@ -191,10 +231,26 @@ export default {
 .first-screen__buttons {
   display: flex;
   justify-content: center;
+  gap: 2rem;
+  padding: 3rem;
+  background: rgba(20, 20, 21, 0.4);
+  backdrop-filter: blur(20px);
+  border-radius: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  @media only screen and (max-width: 768px) {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
 }
 .first-screen__button {
-  &:not(:last-child) {
-    margin-right: 1.4rem;
+  min-width: 20rem;
+
+  @media only screen and (max-width: 768px) {
+    width: 100%;
+    min-width: auto;
   }
 }
 </style>
