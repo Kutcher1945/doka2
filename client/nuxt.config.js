@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   // Global page headers: https://go.nuxtjs.dev/config-head
   ssr: false,
   server: {
@@ -30,7 +30,8 @@ export default {
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       {
         rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css2?family=Exo+2:wght@400;500;600;700;800&family=Baloo+2:wght@400;600&family=Montserrat:wght@900&display=swap'
+        // Add Inter and Poppins for modern glassmorphism design
+        href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Exo+2:wght@400;500;600;700;800&family=Baloo+2:wght@400;600&family=Montserrat:wght@900&display=swap'
       }
     ],
     script: [
@@ -126,16 +127,16 @@ export default {
           login: {
             // https://api.beta-cybert.kz
             // http://localhost:8000
-            url: (process.env.NODE_ENV === 'dev' ? 'http://localhost:8000' : 'https://api.cybert.online' + '/token/login'),
+            url: (process.env.NODE_ENV === 'dev' ? 'http://localhost:8000/token/login' : 'https://api.cybert.online/token/login'),
             method: 'post',
             propertyName: 'auth_token'
           },
           logout: {
-            url: (process.env.NODE_ENV === 'dev' ? 'http://localhost:8000' : 'https://api.cybert.online' + '/token/logout/'),
+            url: (process.env.NODE_ENV === 'dev' ? 'http://localhost:8000/token/logout/' : 'https://api.cybert.online/token/logout/'),
             method: 'post'
           },
           user: {
-            url: (process.env.NODE_ENV === 'dev' ? 'http://localhost:8000' : 'https://api.cybert.online' + '/auth/data/'),
+            url: (process.env.NODE_ENV === 'dev' ? 'http://localhost:8000/auth/data/' : 'https://api.cybert.online/auth/data/'),
             method: 'get',
             propertyName: false
             // propertyName: 'auth_token'

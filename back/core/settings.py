@@ -302,7 +302,7 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
-USE_L10N = True
+# USE_L10N = True  # Removed in Django 5.0 - localization is now always enabled
 
 USE_TZ = True
 

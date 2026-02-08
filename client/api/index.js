@@ -65,13 +65,11 @@ app.use(passport.session())
 // See views/auth.js for authentication routes
 app.use('/auth', authRoutes)
 
-app.listen(3001, '0.0.0.0')
+// Commented out - this runs as Nuxt serverMiddleware, not standalone
+// app.listen(3001, '0.0.0.0')
 
 app.get('/test', function (req, res) {
   res.send(200, { message: 'test ok' })
 })
 
-// export default {
-//  path: '/social-api',
-//  handler: app
-// }
+module.exports = app

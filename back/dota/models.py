@@ -105,7 +105,7 @@ class Rating(models.Model):
 
     class Meta:
         constraints = [
-            CheckConstraint(check=Q(rate__range=(1, 5)), name='valid_rate'),
+            CheckConstraint(condition=Q(rate__range=(1, 5)), name='valid_rate'),
             UniqueConstraint(fields=['user', 'player_info'], name='rating_once')
         ]
 

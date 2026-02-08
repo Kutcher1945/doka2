@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
-import gevent.monkey
-
-gevent.monkey.patch_socket()
-gevent.monkey.patch_ssl()
-
 import os
 import sys
+
+# Only apply gevent monkey patching for production (not for runserver)
+# Gevent is used with gunicorn in production, not Django's dev server
+if 'runserver' not in sys.argv:
+    import gevent.monkey
+    gevent.monkey.patch_socket()
+    gevent.monkey.patch_ssl()
 
 
 def main():
